@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from langchain_community.llms import HuggingFacePipeline
 import torch
+from starlette.middleware.cors import CORSMiddleware
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 # Define the model ID
@@ -25,6 +26,14 @@ local_llm = HuggingFacePipeline(pipeline=pipe)
 # Initialize the FastAPI app
 app = FastAPI()
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Define a request body model
 class TextGenerationRequest(BaseModel):
