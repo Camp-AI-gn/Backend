@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from langchain_community.llms import HuggingFacePipeline
 import torch
-from starlette.middleware.cors import CORSMiddleware
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 # Define the model ID
@@ -35,15 +36,16 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+# Serve static files from the React build directory
+app.mount("/", StaticFiles(directory="build", html=True), name="static")
+
 # Define a request body model
 class TextGenerationRequest(BaseModel):
     prompt: str
 
-
 # Define a response model (optional, but recommended for clarity)
 class TextGenerationResponse(BaseModel):
     generated_text: str
-
 
 @app.post("/generate", response_model=TextGenerationResponse)
 async def generate_text(request: TextGenerationRequest):
@@ -57,9 +59,7 @@ async def generate_text(request: TextGenerationRequest):
         # Handle exceptions and return a 500 error with the exception message
         raise HTTPException(status_code=500, detail=str(e))
 
-
 # Run the app using `uvicorn` (uncomment to run directly from the script)
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8000)
