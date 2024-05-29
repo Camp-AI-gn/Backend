@@ -35,8 +35,8 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# Serve static files from the React build directory at /static path
-app.mount("/assets", StaticFiles(directory="build", html=True), name="assets")
+# Serve static files from the React build directory
+app.mount("/", StaticFiles(directory="build", html=True), name="static")
 
 
 # Define a request body model
