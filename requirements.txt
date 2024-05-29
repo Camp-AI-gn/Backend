@@ -3,3 +3,8 @@ uvicorn~=0.30.0
 fastapi~=0.111.0
 pydantic~=2.7.1
 transformers~=4.41.1
+langchain-community
+langchain-chroma
+langchain_community
+langchain_text_splitters
+langchain
