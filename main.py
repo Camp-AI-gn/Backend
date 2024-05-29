@@ -49,7 +49,7 @@ class TextGenerationResponse(BaseModel):
     generated_text: str
 
 
-@app.post("/generate", response_model=TextGenerationResponse)
+@app.post("/#/generate", response_model=TextGenerationResponse)
 async def generate_text(request: TextGenerationRequest):
     try:
         # Use the local_llm pipeline to generate text
