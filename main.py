@@ -35,9 +35,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# Serve static files from the React build directory
-app.mount("/", StaticFiles(directory="build", html=True), name="static")
-
 
 # Define a request body model
 class TextGenerationRequest(BaseModel):
@@ -49,7 +46,7 @@ class TextGenerationResponse(BaseModel):
     generated_text: str
 
 
-@app.post("/#/generate", response_model=TextGenerationResponse)
+@app.post("/generate", response_model=TextGenerationResponse)
 async def generate_text(request: TextGenerationRequest):
     try:
         # Use the local_llm pipeline to generate text
@@ -60,6 +57,10 @@ async def generate_text(request: TextGenerationRequest):
     except Exception as e:
         # Handle exceptions and return a 500 error with the exception message
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# Serve static files from the React build directory
+app.mount("/", StaticFiles(directory="build", html=True), name="static")
 
 
 # Run the app using `uvicorn` (uncomment to run directly from the script)
