@@ -36,13 +36,7 @@ app.add_middleware(
 )
 
 # Serve static files from the React build directory
-app.mount("/static", StaticFiles(directory="build/assets"), name="static")
-
-
-@app.get("/{full_path:path}", include_in_schema=False)
-async def serve_react_app(full_path: str):
-    # Serve the index.html for any path that doesn't match an API route
-    return StaticFiles(directory="build", html=True).get_response("index.html")
+app.mount("/", StaticFiles(directory="build", html=True), name="static")
 
 
 # Define a request body model
@@ -65,7 +59,7 @@ async def generate_text(request: TextGenerationRequest):
         return TextGenerationResponse(generated_text=generated_text)
     except Exception as e:
         # Handle exceptions and return a 500 error with the exception message
-        raise HTTPException(status_code=500, detail=f"Text generation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # Run the app using `uvicorn` (uncomment to run directly from the script)
